@@ -1,0 +1,12 @@
+body{
+  background-image: url(background.jpeg);
+}
+
+#title{
+  color: #99a19b;
+  font-size: 65px;
+}
+
+.card-title{
+  font-size: 20px;
+}
