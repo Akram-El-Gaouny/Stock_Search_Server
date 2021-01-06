@@ -1,5 +1,5 @@
 var bodyParser = require('body-parser');
-
+var alert = require('alert');
 var yf = require('yahoo-finance');
 
 var URLEncoderParser = bodyParser.urlencoded({extended : false});
@@ -12,7 +12,8 @@ module.exports = {
 function requestHandler(app){
 
     app.get('/', function(req, res){
-        res.render('searchView');
+        var tmp = {name:" ", price: " ", }
+        res.render('searchView', {data : tmp});
     });
 
     
@@ -21,13 +22,27 @@ function requestHandler(app){
         
         yf.quote({symbol: req.body.ticker , modules: ['price']}, function(err, quote){
         
+
+
+        try{ 
             var toReturn = {
                 name: quote.price.longName,
-                price: "$" + quote.price.currency + " " + quote.price.regularMarketPrice,
+                price: "$" + quote.price.currency+ " " + quote.price.regularMarketPrice,
                 change: (quote.price.regularMarketChangePercent *100).toFixed(2) + "%"
             };
-            
             res.render('searchView', {data : toReturn});
+        }catch(TypeError){
+            var data = {
+                name: "Invalid Input",
+                price: "Invalid Input",
+                change:"Invalid Input" 
+            }
+            alert("Ticker Does Not Exist, Please input the correct ticker");
+            res.render('searchView', {data : data});
+        }
+         
+            
+           
 
         });
 
